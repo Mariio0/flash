@@ -7,6 +7,7 @@ import Loader from './components/Loader';
 import Pagination from './components/Pagination';
 import Link from 'next/link';
 import Button from './components/Button';
+import { useSession } from 'next-auth/react';
 
 const RenderCards = ({ data, info }) => {
 	if (data?.length > 0) {
@@ -44,7 +45,8 @@ const RenderCards = ({ data, info }) => {
 
 const Home = () => {
 	const [isLoading, setIsLoading] = useState(false);
-	const [allCards, setAllCards] = useState(null);
+	const [cards, setCards] = useState(null);
+	const { data: session } = useSession();
 
 	const [searchText, setSearchText] = useState('');
 	const [searchedResults, setSearchedResults] = useState(null);
@@ -55,25 +57,23 @@ const Home = () => {
 	const [postsPerPage, setPostsPerPage] = useState(12);
 	const lastPostIndex = currentPage * postsPerPage;
 	const firstPostIndex = lastPostIndex - postsPerPage;
-	const currentPosts = allCards?.slice(firstPostIndex, lastPostIndex);
+	const currentPosts = cards?.slice(firstPostIndex, lastPostIndex);
 	const [cardsLength, setCardsLength] = useState(null);
 
 	const fetchCards = async () => {
 		setIsLoading(true);
-
 		try {
 			const res = await fetch('/api/flashcards', {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				next: { cache: 'no-store' },
+				next: { revalidate: 10 },
 			});
 
 			if (res.ok) {
 				const result = await res.json();
-				console.log(result);
-				setAllCards(result);
+				setCards(result);
 				setCardsLength(result.length);
 			}
 		} catch (error) {
@@ -107,7 +107,7 @@ const Home = () => {
 		setSearchText(e.target.value);
 		setSearchTimeout(
 			setTimeout(() => {
-				const searchResults = allCards.filter(
+				const searchResults = cards.filter(
 					(card) =>
 						card.title.toLowerCase().includes(searchText.toLowerCase()) ||
 						card.creator.username
@@ -169,7 +169,15 @@ const Home = () => {
 							postsPerPage={postsPerPage}
 							setCurrentPage={setCurrentPage}
 						/>
-						<Button text={'Reload'} onClick={fetchCards} />
+						<button
+							onClick={(e) => {
+								e.preventDefault();
+								fetchCards();
+							}}
+							className='border-2 px-4 py-2 rounded-md hover:border-cl4'
+						>
+							Reload
+						</button>
 					</>
 				)}
 			</div>
