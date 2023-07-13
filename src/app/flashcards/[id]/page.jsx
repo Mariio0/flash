@@ -31,7 +31,9 @@ const Flashcard = () => {
 
 	useEffect(() => {
 		const fetchCards = async () => {
-			const response = await fetch(`/api/flashcards/${flashcardId}`);
+			const response = await fetch(`/api/flashcards/${flashcardId}`, {
+				next: { revalidate: 0 },
+			});
 			const data = await response.json();
 			setCards(data.flashcards);
 			setTitle(data.title);

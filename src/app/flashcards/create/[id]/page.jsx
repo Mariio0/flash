@@ -59,6 +59,7 @@ const UpdateFlashcards = () => {
 					title: title,
 					flashcards: cards,
 				}),
+				next: { revalidate: 0 },
 			});
 
 			if (res.ok) {

@@ -26,7 +26,7 @@ const Profile = () => {
 	useEffect(() => {
 		const fetchCards = async () => {
 			const response = await fetch(`/api/users/${profileId}/flashcards`, {
-				next: { revalidate: 10 },
+				next: { revalidate: 0 },
 			});
 			const data = await response.json();
 			console.log(data);
