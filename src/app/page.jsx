@@ -6,6 +6,7 @@ import Card from './components/Card';
 import Loader from './components/Loader';
 import Pagination from './components/Pagination';
 import Link from 'next/link';
+import Button from './components/Button';
 
 const RenderCards = ({ data, info }) => {
 	if (data?.length > 0) {
@@ -57,31 +58,32 @@ const Home = () => {
 	const currentPosts = allCards?.slice(firstPostIndex, lastPostIndex);
 	const [cardsLength, setCardsLength] = useState(null);
 
-	useEffect(() => {
-		const fetchCards = async () => {
-			setIsLoading(true);
+	const fetchCards = async () => {
+		setIsLoading(true);
 
-			try {
-				const res = await fetch('/api/flashcards', {
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					next: { cache: 'no-store' },
-				});
+		try {
+			const res = await fetch('/api/flashcards', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				next: { cache: 'no-store' },
+			});
 
-				if (res.ok) {
-					const result = await res.json();
-					console.log(result);
-					setAllCards(result);
-					setCardsLength(result.length);
-				}
-			} catch (error) {
-				alert(error);
-			} finally {
-				setIsLoading(false);
+			if (res.ok) {
+				const result = await res.json();
+				console.log(result);
+				setAllCards(result);
+				setCardsLength(result.length);
 			}
-		};
+		} catch (error) {
+			alert(error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	useEffect(() => {
 		fetchCards();
 	}, []);
 
@@ -91,14 +93,13 @@ const Home = () => {
 	// 			next: { revalidate: 10 },
 	// 		});
 	// 		const data = await response.json();
-			
+
 	// 		setCards(data);
 	// 		setCardsLength(data.length);
 	// 		setCreator(data[0].creator);
 	// 	};
 	// 	if (profileId) fetchCards();
 	// }, []);
-
 
 	const handleSearchChange = (e) => {
 		clearTimeout(searchTimeout);
@@ -162,11 +163,13 @@ const Home = () => {
 								</>
 							)}
 						</div>
+
 						<Pagination
 							totalPosts={cardsLength}
 							postsPerPage={postsPerPage}
 							setCurrentPage={setCurrentPage}
 						/>
+						<Button text={'Reload'} onClick={fetchCards} />
 					</>
 				)}
 			</div>
