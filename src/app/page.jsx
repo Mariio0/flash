@@ -67,7 +67,7 @@ const Home = () => {
 					headers: {
 						'Content-Type': 'application/json',
 					},
-					next: { revalidate: 0 },
+					next: { cache: 'no-store' },
 				});
 
 				if (res.ok) {

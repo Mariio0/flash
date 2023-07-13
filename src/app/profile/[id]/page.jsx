@@ -8,7 +8,6 @@ import Pagination from '@src/app/components/Pagination';
 import Loader from '@src/app/components/Loader';
 
 const Profile = () => {
-	const router = useRouter();
 	const { data: session } = useSession();
 	const params = useParams();
 	const profileId = params.id;
@@ -26,15 +25,14 @@ const Profile = () => {
 	useEffect(() => {
 		const fetchCards = async () => {
 			const response = await fetch(`/api/users/${profileId}/flashcards`, {
-				next: { revalidate: 0 },
+				next: { revalidate: 10 },
 			});
 			const data = await response.json();
-			console.log(data);
+			
 			setCards(data);
 			setCardsLength(data.length);
 			setCreator(data[0].creator);
 		};
-		console.log(session?.user.email);
 		if (profileId) fetchCards();
 	}, []);
 
