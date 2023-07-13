@@ -45,7 +45,7 @@ const RenderCards = ({ data, info }) => {
 
 const Home = () => {
 	const [isLoading, setIsLoading] = useState(false);
-	const [cards, setCards] = useState(null);
+	const [cards, setCards] = useState([]);
 	const { data: session } = useSession();
 
 	const [searchText, setSearchText] = useState('');

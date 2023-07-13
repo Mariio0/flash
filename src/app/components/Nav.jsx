@@ -4,13 +4,15 @@ import Link from 'next/link';
 import { BsCardText } from 'react-icons/bs';
 
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
 
 const Nav = () => {
 	const { data: session } = useSession();
 	const [providers, setProviders] = useState(null);
 	const [toggleDropdown, setToggleDropdown] = useState(false);
+	const dropdown = useRef(null);
+
 	useEffect(() => {
 		const setUpProviders = async () => {
 			const response = await getProviders();
@@ -19,6 +21,20 @@ const Nav = () => {
 
 		setUpProviders();
 	}, []);
+
+	useEffect(() => {
+		// only add the event listener when the dropdown is opened
+		if (!toggleDropdown) return;
+		function handleClick(event) {
+			if (dropdown.current && !dropdown.current.contains(event.target)) {
+				setToggleDropdown(false);
+			}
+		}
+		window.addEventListener('click', handleClick);
+		// clean up
+		return () => window.removeEventListener('click', handleClick);
+	}, [toggleDropdown]);
+
 	return (
 		<nav className='flex justify-between w-full xl:max-w-7xl xl:mx-auto relative px-2'>
 			<Link
@@ -93,6 +109,7 @@ const Nav = () => {
 									return !prev;
 								});
 							}}
+							ref={dropdown}
 						>
 							<p className='px-1 select-none'>{session?.user.name}</p>
 							<Image
@@ -105,8 +122,11 @@ const Nav = () => {
 						</div>
 
 						{toggleDropdown && (
-							<div className='absolute flex flex-col top-16 bg-cl5 rounded-lg p-4 items-start w-44 gap-1 z-10'>
-								<Link href='/profile' onClick={() => setToggleDropdown(false)}>
+							<div className='absolute flex flex-col top-16 right-0 bg-cl5 rounded-lg p-4 items-start w-44 gap-1 z-10'>
+								<Link
+									href={`/profile/${session?.user.id}`}
+									onClick={() => setToggleDropdown(false)}
+								>
 									My Profile
 								</Link>
 								<Link
@@ -131,7 +151,7 @@ const Nav = () => {
 				) : (
 					<>
 						<div className='flex justify-between items-center gap-1 text-cl3'>
-							<p className='text-black'>Sign in:</p>
+							<p className='text-black'>Sign in &nbsp;</p>
 							{providers &&
 								Object.values(providers).map((provider) => (
 									<button
