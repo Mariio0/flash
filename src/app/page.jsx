@@ -62,7 +62,7 @@ const Home = () => {
 			setIsLoading(true);
 
 			try {
-				const res = await fetch('api/flashcards', {
+				const res = await fetch('/api/flashcards', {
 					method: 'GET',
 					headers: {
 						'Content-Type': 'application/json',
@@ -84,6 +84,21 @@ const Home = () => {
 		};
 		fetchCards();
 	}, []);
+
+	// useEffect(() => {
+	// 	const fetchCards = async () => {
+	// 		const response = await fetch(`/api/users/${profileId}/flashcards`, {
+	// 			next: { revalidate: 10 },
+	// 		});
+	// 		const data = await response.json();
+			
+	// 		setCards(data);
+	// 		setCardsLength(data.length);
+	// 		setCreator(data[0].creator);
+	// 	};
+	// 	if (profileId) fetchCards();
+	// }, []);
+
 
 	const handleSearchChange = (e) => {
 		clearTimeout(searchTimeout);
