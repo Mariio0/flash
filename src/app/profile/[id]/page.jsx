@@ -25,14 +25,16 @@ const Profile = () => {
 
 	useEffect(() => {
 		const fetchCards = async () => {
-			const response = await fetch(`/api/users/${profileId}/flashcards`);
+			const response = await fetch(`/api/users/${profileId}/flashcards`, {
+				next: { revalidate: 10 },
+			});
 			const data = await response.json();
 			console.log(data);
 			setCards(data);
 			setCardsLength(data.length);
 			setCreator(data[0].creator);
 		};
-
+		console.log(session?.user.email);
 		if (profileId) fetchCards();
 	}, []);
 

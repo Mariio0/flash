@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
-const connectDB = () => {
+const connectDB = async () => {
 	mongoose.set('strictQuery', true);
 
-	mongoose
+	await mongoose
 		.connect(process.env.MONGODB_URI)
 		.then(() => {
 			console.log('MongoDB connected');

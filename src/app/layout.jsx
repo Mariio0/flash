@@ -17,10 +17,12 @@ export default function RootLayout({ children }) {
 		<html lang='en'>
 			<body className={roboto.className}>
 				<Provider>
-					<Nav />
-					<main>{children}</main>
-					<Toaster />
-					<Footer />
+					<main>
+						<Nav />
+						{children}
+						<Toaster />
+						<Footer />
+					</main>
 				</Provider>
 			</body>
 		</html>
