@@ -75,12 +75,12 @@ const Home = () => {
 				}
 			);
 
-			if (res.ok) {
-				const result = await res.json();
-				console.log(result);
-				setCards(result);
-				setCardsLength(result.length);
-			}
+			// if (res.ok) {
+			const result = await res.json();
+			console.log(result);
+			setCards(result);
+			setCardsLength(result.length);
+			// }
 		} catch (error) {
 			alert(error);
 		} finally {

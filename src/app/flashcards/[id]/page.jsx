@@ -49,7 +49,7 @@ const Flashcard = () => {
 
 	const handleDelete = async () => {
 		try {
-			await fetch(`/api/flashcards/${flashcardId.toString()}`, {
+			await fetch(`/api/flashcards/${flashcardId}`, {
 				method: 'DELETE',
 			});
 			router.push('/');
