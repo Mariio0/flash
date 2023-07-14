@@ -6,10 +6,10 @@ import Card from './components/Card';
 import Loader from './components/Loader';
 import Pagination from './components/Pagination';
 import Link from 'next/link';
-import Button from './components/Button';
 import { useSession } from 'next-auth/react';
 
 const RenderCards = ({ data, info }) => {
+	console.log(data);
 	if (data?.length > 0) {
 		return data.map((card) => (
 			<>
@@ -73,6 +73,7 @@ const Home = () => {
 
 			if (res.ok) {
 				const result = await res.json();
+				console.log(result);
 				setCards(result);
 				setCardsLength(result.length);
 			}
