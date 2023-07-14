@@ -63,13 +63,17 @@ const Home = () => {
 	const fetchCards = async () => {
 		setIsLoading(true);
 		try {
-			const res = await fetch('/api/flashcards', {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				next: { revalidate: 10 },
-			});
+			const res = await fetch(
+				'/api/flashcards',
+				{ cache: 'no-store' },
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					next: { revalidate: 10 },
+				}
+			);
 
 			if (res.ok) {
 				const result = await res.json();
